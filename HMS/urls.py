@@ -26,5 +26,7 @@ routers.register("registration", RegistrationView, basename="registrationView")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include(routers.urls))
+    path("api/", include(routers.urls)),
+    path("api/login/", LoginAPIView.as_view(),name="loginView")
+
 ]

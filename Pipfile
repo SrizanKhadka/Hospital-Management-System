@@ -4,10 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-<<<<<<< HEAD
-=======
-djangorestframework = "*"
->>>>>>> 7539565d626bae4810a591e13903947439d7b164
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
