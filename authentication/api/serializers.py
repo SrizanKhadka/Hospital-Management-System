@@ -3,6 +3,7 @@ from authentication.models import UserModel
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import Token
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from HMS.exception import CustomException
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,14 +21,15 @@ class UserSerializer(serializers.ModelSerializer):
         role = data["role"]
         if role == "DOCTOR":
             if not data["specialization"]:
-                raise serializers.ValidationError(
-                    "Doctor's Specialization is required!"
-                )
+                # raise serializers.ValidationError(
+                #     "Doctor's Specialization is required!"
+                # )
+                raise CustomException(400,"Doctor's Specialization is required!")
         if role == "STAFF":
             if not data["jobTitle"]:
                 raise serializers.ValidationError("Staff's title is required!")
 
-        if role in {"DOCTOR", "ADMIN", "STAFF"}:
+        if role in ["DOCTOR", "ADMIN", "STAFF"]:
             required_fields = ["shortBio", "joined_date", "schedule"]
             for field in required_fields:
                 if not data.get(field):
