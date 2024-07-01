@@ -3,7 +3,7 @@ from authentication.models import UserModel
 from authentication.api.serializers import UserSerializer, LoginSerializer
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 
