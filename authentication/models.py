@@ -29,7 +29,7 @@ BLOOD_GROUP_CHOICES = [
 class UserModel(AbstractUser):
     username = models.CharField(max_length=150, null=True, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="user")
-    fullName = models.CharField(max_length=20)
+    fullName = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     phoneNumber = models.CharField(max_length=15)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES)

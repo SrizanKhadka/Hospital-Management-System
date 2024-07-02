@@ -18,12 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         role = data["role"]
+
         if role == "DOCTOR":
             if not data["specialization"]:
                 raise serializers.ValidationError(
                     "Doctor's Specialization is required!"
                 )
-                
+
         if role == "STAFF":
             if not data["jobTitle"]:
                 raise serializers.ValidationError("Staff's title is required!")
