@@ -132,7 +132,7 @@ ACCOUNT_AUTHENTICATION_METHOD ="email"
 
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER':'HMS.exception.customExceptionHandler',
+    'EXCEPTION_HANDLER':'HMS.exception_handlers.customExceptionHandler',
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
