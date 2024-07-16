@@ -24,6 +24,14 @@ class UserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "Doctor's Specialization is required!"
                 )
+            elif not data["available_days"]:
+                raise serializers.ValidationError(
+                    "Doctor's available days is required!"
+                )
+            elif not data["consultation_fees"]:
+                raise serializers.ValidationError(
+                    "Doctor's consulataion fees is required!"
+                )
 
         if role == "STAFF":
             if not data["jobTitle"]:
