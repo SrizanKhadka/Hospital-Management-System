@@ -18,12 +18,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         role = data["role"]
+
         if role == "DOCTOR":
             if not data["specialization"]:
                 raise serializers.ValidationError(
                     "Doctor's Specialization is required!"
                 )
-                
+            elif not data["available_days"]:
+                raise serializers.ValidationError(
+                    "Doctor's available days is required!"
+                )
+            elif not data["consultation_fees"]:
+                raise serializers.ValidationError(
+                    "Doctor's consulataion fees is required!"
+                )
+
         if role == "STAFF":
             if not data["jobTitle"]:
                 raise serializers.ValidationError("Staff's title is required!")
