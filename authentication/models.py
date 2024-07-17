@@ -46,7 +46,7 @@ class UserModel(AbstractUser):
     jobTitle = models.CharField(max_length=100, null=True, blank=True)
 
     # For both doctor and Staff
-    schedule = models.JSONField(null=True, blank=True)
+    schedule = models.CharField(max_length=100,null=True, blank=True)
 
     # Doctor specfic fields
     specialization = models.CharField(max_length=100, null=True, blank=True)
