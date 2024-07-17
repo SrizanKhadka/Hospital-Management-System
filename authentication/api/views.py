@@ -35,13 +35,14 @@ class RegistrationView(ModelViewSet):
             )
 
     def perform_create(self, serializer):
-        serializer.save()
+        user = serializer.save()
+        print(user)
 
     def create_account(self, data):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
-        self.create_role_specific_account(user=user, role=data.role)
+        # self.create_role_specific_account(user=user, role=data['role'])
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
