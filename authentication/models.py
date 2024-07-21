@@ -46,12 +46,13 @@ class UserModel(AbstractUser):
     jobTitle = models.CharField(max_length=100, null=True, blank=True)
 
     # For both doctor and Staff
-    schedule = models.CharField(max_length=100,null=True, blank=True)
+    # schedule = models.CharField(max_length=100, null=True, blank=True)
+    schedule = models.JSONField(null=True,blank=True)
 
     # Doctor specfic fields
     specialization = models.CharField(max_length=100, null=True, blank=True)
-    max_appointments_per_day = models.IntegerField(default=8,null=True,blank=True)
-    available_days = models.IntegerField(null=True,blank=True)
+    max_appointments_per_day = models.IntegerField(default=8, null=True, blank=True)
+    available_days = models.IntegerField(null=True, blank=True)
     consultation_fees = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True
     )
