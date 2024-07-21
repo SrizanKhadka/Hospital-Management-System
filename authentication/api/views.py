@@ -17,16 +17,15 @@ class RegistrationView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         role = data.get("role")
-        user = request.user
 
         if role == "ADMIN":
-            self.create_admin(request=request)
+            return self.create_admin(request=request)
 
         elif role in ["DOCTOR", "STAFF"]:
-            self.create_doctor_or_staff(request=request)
+            return self.create_doctor_or_staff(request=request)
 
         elif role == "USER":
-            return self.create_account(request.data)
+            return self.create_account(data=data)
 
         else:
             return Response(
@@ -35,13 +34,15 @@ class RegistrationView(ModelViewSet):
             )
 
     def perform_create(self, serializer):
-        serializer.save()
+        user = serializer.save()
+        return user
 
     def create_account(self, data):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
-        self.create_role_specific_account(user=user, role=data.role)
+        print(f"ROLE = {data['role']}")
+        self.create_role_specific_account(user=user, role=data["role"])
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
@@ -53,8 +54,7 @@ class RegistrationView(ModelViewSet):
                 {"error": "Only superusers can create ADMIN users."},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        else:
-            return self.create_account(request.data)
+        return self.create_account(request.data)
 
     def create_doctor_or_staff(self, request):
         if IsAdmin().has_permission(request, self):
