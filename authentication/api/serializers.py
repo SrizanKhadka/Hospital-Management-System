@@ -56,6 +56,9 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(
                 password
             )  # This is the way of hashing the password not just posting into the database.
+        
+        instance.confirmPassword = instance.password
+        
         instance.save()
         return instance
 

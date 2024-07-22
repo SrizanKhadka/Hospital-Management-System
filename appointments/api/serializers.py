@@ -9,4 +9,5 @@ class AppointmentSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         #Schedule--> Appointment should be request under the doctor's schedule.
-        date
+        # date
+        pass
