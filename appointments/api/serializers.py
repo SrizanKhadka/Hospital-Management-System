@@ -12,37 +12,40 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, data):
-        print(f'VALIDATE DATA = {data}')
-        # self.validate_appointment_date(data)
+        doctor = data['doctor']
+        print(f'VALIDATE DATA = {doctor.id}')
+        self.validate_appointment_date(data=data,doctorId=doctor.id)
+        return data
 
-    def validate_appointment_date(self, data):
-        doctor = data["doctor"]
-        if not doctor:
-         doctor = DoctorModel.objects.get(id=doctor)
-         schedule = (
-            doctor.schedule
-         )  # Assuming `schedule` is stored as JSONField in DoctorModel
-         appointment_datetime = data["appointment_date"]
-         appointment_day = appointment_datetime.strftime(
-            "%A"
-         )  # Get day name (e.g., "Monday")
-         appointment_time = appointment_datetime.time()
-        else:
-            raise serializers.ValidationError("Doctor doesn't exist!")
+    def validate_appointment_date(self, data, doctorId):
+        doctor = data['doctor']
+        
+        # Fetching the doctor's schedule
+        doctor_instance = DoctorModel.objects.get(id=doctor.id)
+        schedule = doctor_instance.schedule  # Assuming `schedule` is a JSONField
 
-        if appointment_day not in schedule:
-            raise serializers.ValidationError(
-                f"Doctor is not available on {appointment_day}s."
-            )
+        # appointment_datetime = data.get("appointment_date")
+        # if not appointment_datetime:
+        #     raise serializers.ValidationError("Appointment date is required.")
 
-        time_slots = schedule[appointment_day]
-        for time_slot in time_slots:
-            start_time, end_time = time_slot.split("-")
-            start_time = datetime.datetime.strptime(start_time, "%H:%M").time()
-            end_time = datetime.datetime.strptime(end_time, "%H:%M").time()
-            if start_time <= appointment_time <= end_time:
-                return appointment_datetime
+        # appointment_day = appointment_datetime.strftime(
+        #     "%A"
+        # )  # Get day name (e.g., "Monday")
+        # appointment_time = appointment_datetime.time()
 
-        raise serializers.ValidationError(
-            f"Doctor is not available at {appointment_time} on {appointment_day}s."
-        )
+        # if appointment_day not in schedule:
+        #     raise serializers.ValidationError(
+        #         f"Doctor is not available on {appointment_day}s."
+        #     )
+
+        # time_slots = schedule[appointment_day]
+        # for time_slot in time_slots:
+        #     start_time, end_time = time_slot.split("-")
+        #     start_time = datetime.strptime(start_time, "%H:%M").time()
+        #     end_time = datetime.strptime(end_time, "%H:%M").time()
+        #     if start_time <= appointment_time <= end_time:
+        #         return data
+
+        # raise serializers.ValidationError(
+        #     f"Doctor is not available at {appointment_time} on {appointment_day}s."
+        # )
