@@ -22,7 +22,10 @@ class AppointmentModel(models.Model):
     appointment_date = models.DateTimeField()
     reason = models.TextField()
     status = models.CharField(max_length=30, choices=status, default="PENDING")
-    Consulting_fees_paid_token = models.CharField(max_length=30,unique=True)
+    Consulting_fees_paid_token = models.CharField(max_length=30, unique=True)
     remarks = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Appointment - {self.doctor.user.fullName} - {self.user_patient.user.fullName}"
