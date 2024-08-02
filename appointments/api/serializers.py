@@ -2,7 +2,6 @@ from rest_framework import serializers
 from appointments.models import AppointmentModel
 from authentication.models import DoctorModel
 from datetime import datetime
-from django.shortcuts import get_object_or_404
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -12,9 +11,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, data):
-        self.isMaxAppointmentFilled(data=data)
-        self.validate_date_appointment(data=data)
-        return data
+        validate_data=super().validate(data)
+        self.isMaxAppointmentFilled(data=validate_data)
+        self.validate_user(data=validate_data)
+        self.validate_date_appointment(data=validate_data)
+        return validate_data
+
+    def validate_user(self, data):
+        request = self.context.get('request', None)
+        print(F'REQUESTED USER = {request.user.id}')
+        print(F'USER = {data["user_patient"].id}')
+        if request and request.user.id == data["user_patient"].user.id:
+            return data
+        else:
+            raise serializers.ValidationError("User is not matching!")
 
     def validate_date_appointment(self, data):
         print(f"Data type: {type(data)}, Data content: {data}")
@@ -49,7 +59,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 return data
 
         raise serializers.ValidationError(
-            f"Doctor is not available at {appointment_time} on {appointment_day}s."
+            f"Doctor is not available at {
+                appointment_time} on {appointment_day}s."
         )
 
     def isMaxAppointmentFilled(self, data):

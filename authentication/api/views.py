@@ -5,7 +5,7 @@ from authentication.api.serializers import UserSerializer, LoginSerializer
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
-from authentication.api.permissions import IsAdmin
+from utils.permissions import IsAdmin
 from rest_framework import status
 from rest_framework import serializers
 
