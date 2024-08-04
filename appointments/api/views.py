@@ -10,4 +10,6 @@ from appointments.api.serializers import AppointmentSerializer
 class CreateAppointmentView(ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = AppointmentModel.objects.all()
-    permission_classes = [permissions.IsAuthenticated,IsAppointmentHolder]
+    permission_classes = [permissions.IsAuthenticated, IsAppointmentHolder]
+    
+    

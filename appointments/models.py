@@ -23,7 +23,7 @@ class AppointmentModel(models.Model):
     reason = models.TextField()
     status = models.CharField(max_length=30, choices=status, default="PENDING")
     Consulting_fees_paid_token = models.CharField(max_length=30, unique=True)
-    remarks = models.TextField()
+    remarks = models.TextField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
