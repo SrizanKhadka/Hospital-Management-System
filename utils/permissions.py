@@ -16,9 +16,14 @@ class IsAdmin(permissions.BasePermission):
         return False
 
 
-class IsAppointmentHolder(permissions.BasePermission):
+class IsAppointmentHolderUser(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         print(f"REQUESTED USER = {request.user}")
         print(f"OBJECT USER = {obj.user_patient.user}")
         return request.user == obj.user_patient.user
+
+
+class IsAppointmentHolderDoctor(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.doctor.user

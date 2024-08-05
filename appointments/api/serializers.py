@@ -21,10 +21,14 @@ class AppointmentSerializer(serializers.ModelSerializer):
         request = self.context.get('request', None)
         print(F'REQUESTED USER = {request.user.id}')
         print(F'USER = {data["user_patient"].id}')
-        if request and request.user.id == data["user_patient"].user.id:
+        
+        if request == "POST":
+         if request and request.user.id == data["user_patient"].user.id:
             return data
-        else:
+         else:
             raise serializers.ValidationError("User is not matching!")
+        elif request == "PUT":
+            return data
 
     def validate_date_appointment(self, data):
         print(f"Data type: {type(data)}, Data content: {data}")
