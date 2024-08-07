@@ -2,6 +2,9 @@ from rest_framework import serializers
 from appointments.models import AppointmentModel
 from authentication.models import DoctorModel
 from datetime import datetime
+from authentication.models import UserModel
+from utils.permissions import IsAppointmentHolderDoctor, IsAppointmentHolderUser
+from rest_framework.exceptions import ValidationError
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -89,6 +92,36 @@ class AppointmentSerializer(serializers.ModelSerializer):
             )
 
         return data
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        user_role = UserModel.objects.get(id=request.user.id).role
+        print(f"REQUESTED USER ROLE IN UPDATE = {user_role}")
+
+        if user_role == "DOCTOR" and IsAppointmentHolderDoctor().has_object_permission(
+            request, self, instance
+        ):
+            instance.remarks = validated_data.get(
+                "remarks", instance.remarks
+            )
+            instance.save(update_fields=["remarks"])
+        elif user_role == "USER" and IsAppointmentHolderUser().has_object_permission(
+            request, self, instance
+        ):
+            instance.reason = validated_data.get(
+                "reason", instance.reason)
+            instance.appointment_date = validated_data.get(
+                "appointment_date", instance.appointment_date
+            )
+            instance.save(update_fields=["reason", "appointment_date"])
+        elif user_role == "ADMIN":
+            instance.save()
+
+        else:
+            print('I AM IN THE ELSE CASE')
+            raise ValidationError(
+                {"message": "Unknown Request!"}
+            )
 
     # def validate_appointment_date(self, data):
     #     print(f'Data type: {type(data)}, Data content: {data}')
