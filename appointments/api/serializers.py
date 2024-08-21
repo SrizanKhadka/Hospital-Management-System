@@ -122,6 +122,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise ValidationError(
                 {"message": "Unknown Request!"}
             )
+        return instance
 
     # def validate_appointment_date(self, data):
     #     print(f'Data type: {type(data)}, Data content: {data}')
