@@ -16,20 +16,24 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def validate(self, data):
         validate_data=super().validate(data)
         self.isMaxAppointmentFilled(data=validate_data)
-        self.validate_user(data=validate_data)
+        self.user_validate(data=validate_data)
         self.validate_date_appointment(data=validate_data)
         return validate_data
 
-    def validate_user(self, data):
+    def user_validate(self, data):
         request = self.context.get('request', None)
+        request_method = request.method
+        print(f"REQUEST = {request}")
         print(F'REQUESTED USER = {request.user.id}')
-        print(F'USER = {data["user_patient"].id}')
+        print(F'USER = {data["user_patient"].user.id}')
         
-        if request == "POST":
-         if request and request.user.id == data["user_patient"].user.id:
-            return data
-         else:
-            raise serializers.ValidationError("User is not matching!")
+        if request_method == "POST":
+            print('I AM INSIDE POST')
+            if request and request.user.id == data["user_patient"].user.id:
+             print('I AM INSIDE USER IS MATHCING')
+             return data
+            else:
+             raise serializers.ValidationError("User is not matching!")
         elif request == "PUT":
             return data
 
@@ -81,7 +85,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
             .count()
         )
 
-        # Debugging prints (placed before the return statement)
         print(f"APPOINTMENT DATE = {appointment_date}")
         print(f"APPOINTMENTS FILTERED BY DOCTOR = {appointments_by_doctor}")
 
