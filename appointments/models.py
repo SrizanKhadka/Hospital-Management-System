@@ -1,4 +1,5 @@
 from django.db import models
+from HMS.choices import StatusChoices
 from authentication.models import DoctorModel, PatientModel
 
 # Create your models here.
@@ -21,7 +22,8 @@ class AppointmentModel(models.Model):
     )
     appointment_date = models.DateTimeField()
     reason = models.TextField()
-    status = models.CharField(max_length=30, choices=status, default="PENDING")
+    status = models.CharField(
+        max_length=30, choices=StatusChoices.choices, default=StatusChoices.PENDING)
     Consulting_fees_paid_token = models.CharField(max_length=30, unique=True)
     remarks = models.TextField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
