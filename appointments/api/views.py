@@ -7,6 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from appointments.api.serializers import AppointmentSerializer
 from rest_framework.decorators import api_view, action
+from authentication.models import PatientModel
 
 
 class CreateAppointmentView(ModelViewSet):
@@ -16,16 +17,10 @@ class CreateAppointmentView(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        appointment_data = request.data
-        # request = self.context.get('request', None)
-        # request_method = request.method
         user = request.user.id
+        patient = PatientModel.objects.get(user=user).id
 
-        print(f'REQUESTED USER = {user}')
-        print(f'USER APPOINTMENT LIST = {appointment_data["user_patient"].user.id}')
-
-        queryset = queryset.filter(
-            user_patient=appointment_data["user_patient"])
+        queryset = queryset.filter(user_patient=patient)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
