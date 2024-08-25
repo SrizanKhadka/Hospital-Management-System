@@ -14,6 +14,27 @@ class CreateAppointmentView(ModelViewSet):
     queryset = AppointmentModel.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        appointment_data = request.data
+        # request = self.context.get('request', None)
+        # request_method = request.method
+        user = request.user.id
+
+        print(f'REQUESTED USER = {user}')
+        print(f'USER APPOINTMENT LIST = {appointment_data["user_patient"].user.id}')
+
+        queryset = queryset.filter(
+            user_patient=appointment_data["user_patient"])
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=["POST"], url_path="appointment_cancel")
     def perform_cancellation(self, request, *args, **kwargs):
         instance = self.get_object()
