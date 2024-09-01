@@ -5,9 +5,10 @@ from authentication.models import *
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-from appointments.api.serializers import AppointmentSerializer
+from appointments.api.appointment.serializers import AppointmentSerializer
 from rest_framework.decorators import api_view, action
-from authentication.models import PatientModel
+from django.db.models import Q
+from authentication.models import PatientModel,DoctorModel
 
 
 class CreateAppointmentView(ModelViewSet):
@@ -19,8 +20,9 @@ class CreateAppointmentView(ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         user = request.user.id
         patient = PatientModel.objects.get(user=user).id
+        doctor = DoctorModel.objects.get(user=user).id
 
-        queryset = queryset.filter(user_patient=patient)
+        queryset = queryset.filter(Q(user_patient=patient) | Q(doctor=doctor))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
