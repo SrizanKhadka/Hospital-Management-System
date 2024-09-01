@@ -19,16 +19,17 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from authentication.api.views import *
-from appointments.api.views import *
+from appointments.api.appointment.views import *
+from appointments.api.test_and_results.views import *
 
 routers = DefaultRouter()
 
 routers.register("registration", RegistrationView, basename="registrationView")
 routers.register("appointment", CreateAppointmentView,basename="createAppointmentsView")
+routers.register('test_and_result',TestAndResultView,basename="testAndResultView")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(routers.urls)),
     path("api/login/", LoginAPIView.as_view(),name="loginView")
-
 ]

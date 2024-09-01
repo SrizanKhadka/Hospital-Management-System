@@ -107,7 +107,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
             instance.remarks = validated_data.get(
                 "remarks", instance.remarks
             )
-            instance.save(update_fields=["remarks"])
+            instance.tests_required = validated_data.get(
+                "tests_required", instance.tests_required
+            )
+            instance.save(update_fields=["remarks","tests_required"])
         elif user_role == "USER" and IsAppointmentHolderUser().has_object_permission(
             request, self, instance
         ):

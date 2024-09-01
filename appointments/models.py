@@ -17,6 +17,9 @@ class AppointmentModel(models.Model):
         max_length=30, choices=StatusChoices.choices, default=StatusChoices.PENDING
     )
     Consulting_fees_paid_token = models.CharField(max_length=30, unique=True)
+    tests_required = models.CharField(
+        max_length=30, choices=TestTypes, null=True, blank=True
+    )
     remarks = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -31,6 +34,7 @@ class TestAndResultModel(models.Model):
     )
     test_type = models.CharField(max_length=100, choices=TestTypes)
     test_name = models.CharField(max_length=100)
+    test_fees_paid_token = models.CharField(max_length=30, unique=True)
     test_date = models.DateTimeField(auto_now_add=True)
     test_result_available = models.BooleanField(default=False)
     notes = models.TextField(null=True, blank=True)
