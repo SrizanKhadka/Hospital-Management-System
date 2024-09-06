@@ -5,9 +5,14 @@ from datetime import datetime
 from authentication.models import UserModel
 from utils.permissions import IsAppointmentHolderDoctor, IsAppointmentHolderUser
 from rest_framework.exceptions import ValidationError
+from rest_framework import fields
+from HMS import choices
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+
+    tests = fields.MultipleChoiceField(choices=choices.TestTypes)
+
 
     class Meta:
         model = AppointmentModel

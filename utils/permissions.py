@@ -32,7 +32,7 @@ class IsAppointmentHolderDoctor(permissions.BasePermission):
 class IsStaff(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        print(f"USER = {request.user}")
+        print(f"USER = {request.user.id}")
 
         if not request.user.is_authenticated:
             return False
