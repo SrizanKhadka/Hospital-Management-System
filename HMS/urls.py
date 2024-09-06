@@ -21,6 +21,9 @@ from rest_framework.routers import DefaultRouter
 from authentication.api.views import *
 from appointments.api.appointment.views import *
 from appointments.api.test_and_results.views import *
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 routers = DefaultRouter()
 
@@ -32,4 +35,4 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(routers.urls)),
     path("api/login/", LoginAPIView.as_view(),name="loginView")
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

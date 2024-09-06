@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "appointments",
+    "multiselectfield"
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,11 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "TOKEN_OBTAIN_SERIALIZER": "authentication.serializers.LoginSerializer",
 }
+
+MEDIA_ROOT = 'appointments/api/test_and_results/'
+
+MEDIA_URL = '/test_reports/'
+
 
 # AUTHENTICATION_BACKENDS = [
 #     "django.contrib.auth.backends.ModelBackend",
