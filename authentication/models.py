@@ -17,6 +17,7 @@ class UserModel(AbstractUser):
     joined_date = models.DateField(blank=True, null=True)
     password = models.CharField(max_length=128)  # Max length for hashed passwords
     confirmPassword = models.CharField(max_length=128)
+    profilePicture = models.FileField(upload_to="profiles/",null=True,blank=True)
 
     # For staff
     jobTitle = models.CharField(max_length=100, null=True, blank=True)

@@ -12,15 +12,3 @@ class TestAndResultView(ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsAdmin|IsStaff]
 
     # parser_classes = [MultiPartParser,FormParser]
-
-
-# {
-#     "appointment": 40,
-#     "test_type": "ECG",
-#     "test_name": "Complete Blood Count",
-#     "test_fees_paid_token": "TOKEN2",
-#     "test_result_available": false,
-
-#     "notes": "Patient fasting for 12 hours prior to test.",
-#     "report_file": null
-# }
