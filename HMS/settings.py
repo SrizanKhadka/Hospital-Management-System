@@ -147,9 +147,13 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "authentication.serializers.LoginSerializer",
 }
 
-MEDIA_ROOT = 'appointments/api/test_and_results/'
+# MEDIA_ROOT = 'appointments/api/test_and_results/'
 
-MEDIA_URL = '/test_reports/'
+# MEDIA_URL = '/test_reports/'
+
+MEDIA_ROOT = 'media/'
+
+MEDIA_URL = '/images/'
 
 
 # AUTHENTICATION_BACKENDS = [
