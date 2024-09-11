@@ -55,10 +55,11 @@ class UserSerializer(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(
                 password
-            )  # This is the way of hashing the password not just posting into the database.
-        
+                # This is the way of hashing the password not just posting into the database.
+            )
+
         instance.confirmPassword = instance.password
-        
+
         instance.save()
         return instance
 
@@ -68,6 +69,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         attrs = super().validate(attrs)
         userData = UserSerializer(self.user)
+        print(f'USER = {self.user}')
         token = self.get_token(self.user)
         access_token = str(token.access_token)
         refresh_token = str(token)
