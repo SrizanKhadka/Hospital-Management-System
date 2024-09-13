@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 from utils.permissions import IsAdmin
 from rest_framework import status
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, action, permission_classes
 
 
 class RegistrationView(ModelViewSet):
@@ -78,25 +78,31 @@ class RegistrationView(ModelViewSet):
         elif role == "ADMIN":
             AdminModel.objects.create(user=user)
 
-    @action(detail=True, methods=["POST"], url_path="update_profile")
+    @action(detail=True, methods=["POST"], url_path="update_profile",permission_classes=[permissions.IsAuthenticated])
     def updateProfile(self, request, *args, **kwargs):
-        instance = self.get_object() 
-        data = request.data 
+        instance = self.get_object()
+        data = request.data
 
         print(f'METHOD FROM THE REQUEST = {request.method}')
         print(f'DATA FROM REQUEST = {data}')
 
         # List of fields that can be updated
-        updatable_fields = ['username', 'fullName', 'email', 'phoneNumber', 'gender','bloodGroup', 'dob', 'address', 'profilePicture']
+        # updatable_fields = ['username', 'fullName', 'email', 'phoneNumber', 'gender','bloodGroup', 'dob', 'address', 'profilePicture']
 
-        for field in updatable_fields:
-            if field in data:
-                # settr() function dynamically sets the value of an attribute on the instance object
-                setattr(instance, field, data[field])
+        # for field in updatable_fields:
+        #     if field in data:
+        #         # settr() function dynamically sets the value of an attribute on the instance object
+        #         setattr(instance, field, data[field])
 
-        instance.save() 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data) 
+        # 'partial=True' allows for partial updates
+        serializer = self.get_serializer(
+            instance, data=data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPIView(TokenObtainPairView):

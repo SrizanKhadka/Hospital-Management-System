@@ -16,31 +16,40 @@ class UserSerializer(serializers.ModelSerializer):
         }
         exclude = ("user_permissions", "groups")
 
+        read_only_fields = [
+            'role', 'joined_date', 'shortBio', 'jobTitle', 'schedule',
+            'specialization', 'max_appointments_per_day',
+            'available_days', 'consultation_fees'
+        ]
+
     def validate(self, data):
-        role = data["role"]
+        validated_data = super().validate(data)
+        # role = validated_data["role"]
+        instance = self.instance
+        role = data.get("role", getattr(instance, "role", None))
 
         if role == "DOCTOR":
-            if not data["specialization"]:
+            if not validated_data["specialization"]:
                 raise serializers.ValidationError(
                     "Doctor's Specialization is required!"
                 )
-            elif not data["available_days"]:
+            elif not validated_data["available_days"]:
                 raise serializers.ValidationError(
                     "Doctor's available days is required!"
                 )
-            elif not data["consultation_fees"]:
+            elif not validated_data["consultation_fees"]:
                 raise serializers.ValidationError(
                     "Doctor's consulataion fees is required!"
                 )
 
         if role == "STAFF":
-            if not data["jobTitle"]:
+            if not validated_data["jobTitle"]:
                 raise serializers.ValidationError("Staff's title is required!")
 
         if role in ["DOCTOR", "ADMIN", "STAFF"]:
             required_fields = ["shortBio", "joined_date", "schedule"]
             for field in required_fields:
-                if not data.get(field):
+                if not validated_data.get(field):
                     raise serializers.ValidationError(
                         f"{field.replace('_', ' ').capitalize()} is required!"
                     )
