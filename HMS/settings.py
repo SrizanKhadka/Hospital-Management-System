@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "appointments",
-    "multiselectfield"
+    "multiselectfield",
+    "drf_yasg"
 ]
 
 MIDDLEWARE = [
