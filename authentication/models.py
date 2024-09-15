@@ -18,6 +18,8 @@ class UserModel(AbstractUser):
     password = models.CharField(max_length=128)  # Max length for hashed passwords
     confirmPassword = models.CharField(max_length=128)
     profilePicture = models.FileField(upload_to="profiles/",null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+
 
     # For staff
     jobTitle = models.CharField(max_length=100, null=True, blank=True)
