@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "appointments",
     "multiselectfield",
-    "drf_yasg"
 ]
 
 MIDDLEWARE = [
