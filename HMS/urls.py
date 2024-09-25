@@ -23,7 +23,7 @@ from appointments.api.appointment.views import *
 from appointments.api.test_and_results.views import *
 from django.conf.urls.static import static
 from django.conf import settings
-
+from authentication.api.views import VerifyEmail
 
 routers = DefaultRouter()
 
@@ -34,5 +34,7 @@ routers.register('test_and_result',TestAndResultView,basename="testAndResultView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(routers.urls)),
-    path("api/login/", LoginAPIView.as_view(),name="loginView")
+    path("api/login/", LoginAPIView.as_view(),name="loginView"),
+    path('email-verify/', VerifyEmail.as_view(), name="email-verify"),  
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
