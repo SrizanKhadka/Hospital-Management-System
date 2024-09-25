@@ -17,9 +17,15 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ("user_permissions", "groups")
 
         read_only_fields = [
-            'role', 'joined_date', 'shortBio', 'jobTitle', 'schedule',
-            'specialization', 'max_appointments_per_day',
-            'available_days', 'consultation_fees'
+            "role",
+            "joined_date",
+            "shortBio",
+            "jobTitle",
+            "schedule",
+            "specialization",
+            "max_appointments_per_day",
+            "available_days",
+            "consultation_fees",
         ]
 
     def validate(self, data):
@@ -42,9 +48,8 @@ class UserSerializer(serializers.ModelSerializer):
                     "Doctor's consulataion fees is required!"
                 )
 
-        if role == "STAFF":
-            if not validated_data["jobTitle"]:
-                raise serializers.ValidationError("Staff's title is required!")
+        if role == "STAFF" and not validated_data["jobTitle"]:
+            raise serializers.ValidationError("Staff's title is required!")
 
         if role in ["DOCTOR", "ADMIN", "STAFF"]:
             required_fields = ["shortBio", "joined_date", "schedule"]
@@ -78,7 +83,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         attrs = super().validate(attrs)
         userData = UserSerializer(self.user)
-        print(f'USER = {self.user}')
+        print(f"USER = {self.user}")
         token = self.get_token(self.user)
         access_token = str(token.access_token)
         refresh_token = str(token)
@@ -88,6 +93,14 @@ class LoginSerializer(TokenObtainPairSerializer):
             "refresh": refresh_token,
             "user_data": userData.data,
         }
+
+class EmailVerificationSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(max_length=555)
+    
+    class Meta:
+        model = UserModel
+        field = ['token']
+    
 
 
 # '**validated_data' means unpacking the dictionary

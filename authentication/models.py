@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from HMS.choices import GenderChoices,RoleChoices,BloodGroupChoices
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserModel(AbstractUser):
@@ -19,7 +20,6 @@ class UserModel(AbstractUser):
     confirmPassword = models.CharField(max_length=128)
     profilePicture = models.FileField(upload_to="profiles/",null=True,blank=True)
     is_verified = models.BooleanField(default=False)
-
 
     # For staff
     jobTitle = models.CharField(max_length=100, null=True, blank=True)
@@ -46,6 +46,13 @@ class UserModel(AbstractUser):
         "dob",
         "address",
     ]
+
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh": str(refresh),
+            "access_token": str(refresh.access_token),
+        }
 
     def __str__(self):
         return self.fullName
