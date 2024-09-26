@@ -1,3 +1,8 @@
+from authentication.models import UserModel
+from authentication.models import UserModel
+from .serializers import EmailVerificationSerializer
+from django.http import HttpResponse
+from rest_framework import status
 from rest_framework.response import Response
 from authentication.models import *
 import jwt
@@ -148,21 +153,36 @@ class VerifyEmail(GenericAPIView):
 
     def get(self, request):
         token = request.GET.get("token")
+        accept = request.headers.get('Accept', '')
+
+        def html_response(message, status_code=status.HTTP_200_OK):
+            return HttpResponse(f"<h1>{message}</h1>", content_type="text/html", status=status_code)
+
+        def json_response(message, status_code=status.HTTP_200_OK):
+            return Response({"email": message}, status=status_code)
+
+        def respond(message, html_message, status_code=status.HTTP_200_OK):
+            if "text/html" in accept:
+                return html_response(html_message, status_code)
+            return json_response(message, status_code)
+
         try:
             payload = jwt.decode(token, options={"verify_signature": False})
-            print(payload)
             user = UserModel.objects.get(id=payload["user_id"])
-            if not user.is_verified:
-                user.is_verified = True
-                user.save()
-            return Response(
-                {"email": "Successfully activated"}, status=status.HTTP_200_OK
-            )
-        except jwt.ExpiredSignatureError as identifier:
-            return Response(
-                {"error": "Activation Expired"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except jwt.exceptions.DecodeError as identifier:
-            return Response(
-                {"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST
-            )
+
+            if user.is_verified:
+                return respond("Already verified", "Email Already Verified!")
+
+            user.is_verified = True
+            user.save()
+            return respond("Successfully activated", "Email Successfully Activated!")
+
+        except jwt.ExpiredSignatureError:
+            return respond("Activation Expired", "Activation Expired", status.HTTP_400_BAD_REQUEST)
+
+        except jwt.exceptions.DecodeError:
+            return respond("Invalid token", "Invalid token", status.HTTP_400_BAD_REQUEST)
+
+            
+
+            
