@@ -95,15 +95,18 @@ class RegistrationView(ModelViewSet):
     def sendEmailVerification(self, user, request):
         user_email = UserModel.objects.get(email=user.email)
         tokens = RefreshToken.for_user(user_email).access_token
-        current_site = get_current_site(request).domain
+        # current_site = get_current_site(request).domain
         relative_link = reverse("email-verify")
-        absurl = f"http://{current_site}{relative_link}?token={tokens}"
+        path = f"{relative_link}?token={tokens}"
+        url = self.request.build_absolute_uri(path)
+
+        print(f'ABOSOULTE URL = {url}')
 
         email_body = (
             "Hi "
             + user.username
             + " Use the link below to verify your email \n"
-            + absurl
+            + url
         )
         data = {
             "email_body": email_body,
@@ -182,7 +185,3 @@ class VerifyEmail(GenericAPIView):
 
         except jwt.exceptions.DecodeError:
             return respond("Invalid token", "Invalid token", status.HTTP_400_BAD_REQUEST)
-
-            
-
-            
