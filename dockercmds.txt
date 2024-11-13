@@ -1,0 +1,16 @@
+Build an Image --> docker build -t "image_name .
+
+Show the list of images created --> docker images
+
+delete the image --> docker rm "image_name"
+
+Run the docker container --> docker run -d -p 8000:8000 hms-image // running in the detach mode.
+
+stop the running container --> docker stop "container_id"
+
+see the running container --> docker ps 
+
+execuute the container --> docker exec -it 8801906c5f89 sh
+
+
+
